@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">GOT_Compagnon</string>
+    <string name="tab_news_title">News</string>
+    <string name="tab_chat_title">Chat</string>
+    <string name="tab_profile_title">Profile</string>
+
+    <string name="button_register">Register</string>
+    <string name="error_email_invalid">Email is not Valid</string>
+    <string name="error_password_invalid">Password must be at least %d chars long and contain letters &amp; numbers</string>
+</resources>

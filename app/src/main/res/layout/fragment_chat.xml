@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:gravity="end"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent">
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/sendMessageContainer">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/sendMessageContainer"
+            android:paddingBottom="16dp"/>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <!-- Send message container -->
+    <RelativeLayout
+        android:id="@+id/sendMessageContainer"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/messageEditText"
+            android:layout_width="match_parent"
+            android:layout_toStartOf="@+id/sendButton"
+            android:layout_height="match_parent"/>
+
+        <Button
+            android:id="@+id/sendButton"
+            android:layout_alignParentEnd="true"
+            android:background="@drawable/ic_send"
+            android:layout_height="40dp"
+            android:layout_width="40dp"/>
+    </RelativeLayout>
+
+</RelativeLayout>

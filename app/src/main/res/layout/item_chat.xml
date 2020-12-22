@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingVertical="10dp"
+    android:paddingRight="15dp"
+    android:paddingLeft="10dp"
+    android:clipToPadding="false">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/ReceivedLayout">
+        <ImageView
+            android:id="@+id/avatarReceived"
+            android:layout_alignParentLeft="true"
+            android:scaleType="centerInside"
+            android:background="@drawable/circle"
+            android:layout_width="34dp"
+            android:layout_height="34dp"/>
+
+        <TextView
+            android:id="@+id/usernameReceived"
+            android:layout_marginLeft="15dp"
+            android:layout_toRightOf="@+id/avatarReceived"
+            android:layout_alignTop="@+id/avatarReceived"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="4dp"
+            android:text="Rose"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/messageBodyReceived"
+            android:layout_below="@+id/usernameReceived"
+            android:layout_alignLeft="@+id/usernameReceived"
+            android:background="@drawable/their_message"
+            android:paddingVertical="12dp"
+            android:paddingHorizontal="16dp"
+            android:elevation="2dp"
+            android:textSize="18dp"
+            android:textColor="@color/white"
+            android:text="kldjfir dklsjrgoknd slekrjekfnds dlfkdjslkefdsd"/>
+
+        <TextView
+            android:id="@+id/dateTextReceived"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignRight="@id/messageBodyReceived"
+            android:layout_below="@id/messageBodyReceived"
+            android:textSize="11dp"
+            android:text="20:51"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/SenLayout"
+        android:layout_below="@+id/ReceivedLayout"
+        android:paddingVertical="10dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/messageBody"
+            android:background="@drawable/my_message"
+            android:textColor="@color/white"
+            android:padding="10dp"
+            android:elevation="2dp"
+            android:textSize="18dp"
+            android:layout_alignParentRight="true"
+            android:text="Placeholder message"
+            />
+
+        <TextView
+            android:id="@+id/dateText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignRight="@id/messageBody"
+            android:layout_below="@id/messageBody"
+            android:textSize="11dp"
+            android:text="20:51"/>
+    </RelativeLayout>
+
+</RelativeLayout>
