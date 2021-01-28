@@ -1,130 +1,104 @@
 package com.e.got_compagnon.fragment
 
-import android.app.AlertDialog
 import android.os.Bundle
-import android.provider.ContactsContract
+import android.os.CountDownTimer
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.e.got_compagnon.Common.Common
 import com.e.got_compagnon.Interface.NewsService
-import com.e.got_compagnon.MainActivity
 import com.e.got_compagnon.R
-import com.e.got_compagnon.adapter.ListSourceAdapter
-import com.e.got_compagnon.model.Website
-import com.google.gson.Gson
-import dmax.dialog.SpotsDialog
-import io.paperdb.Paper
-import retrofit2.Call
-import retrofit2.Response
+import com.e.got_compagnon.adapter.RecyclerAdapter
+import com.squareup.okhttp.OkHttpClient
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import java.sql.Time
+import java.util.concurrent.TimeUnit
 
 class NewsFragment: Fragment() {
 
-    lateinit var layoutManager: LinearLayoutManager
-    lateinit var mService: NewsService
-    lateinit var adapter: ListSourceAdapter //esto lo acabare borrando porque me la sudan las sources
-    //lateinit var dialog:AlertDialog
+    //private val BASE_URL = "https://api.currentsapi.services"
+    private val BASE_URL = "https://newsapi.org"
+    private val TAG = "NewsFragment"
 
-    lateinit var swipe_to_refresh: SwipeRefreshLayout
-    lateinit var recyclerView: RecyclerView
+    private lateinit var recyclerView: RecyclerView
+    lateinit var countDownTimer: CountDownTimer
+
+    private var titleList = mutableListOf<String>()
+    private var descList = mutableListOf<String>()
+    private var imageList = mutableListOf<String>()
+    private var linksList = mutableListOf<String>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        Log.i(TAG, "++ onCreateView ++")
         return inflater.inflate(R.layout.fragment_news, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        Log.i(TAG, "++ onViewCreated ++")
+        //Init views
+        initViews(view)
+        //Init Listeners
+        //initListeners()
+        //make API Request
+        makeAPIRequest(view)
 
-        //Init cache DB
-        val appCOntext = context!!.applicationContext
-        Paper.init(appCOntext)
-
-        //Init Service
-        mService = Common.newsService
-
-        //Init View
-        swipe_to_refresh = view.findViewById(R.id.swipeRefreshNews)
+    }
+    //TODO: poner todo esto dentro del initViews / initListeners
+    private fun setUpRecyclerView(view: View) {
         recyclerView = view.findViewById(R.id.recyclerViewNews)
-
-        //Init listenners
-        swipe_to_refresh.setOnRefreshListener {
-            loadWebSiteSource(true)
-        }
-
-        recyclerView.setHasFixedSize(true)
-        layoutManager= LinearLayoutManager(appCOntext)
-        recyclerView.layoutManager=layoutManager
-
-        //dialog = SpotsDialog(MainActivity.this)
-
-        loadWebSiteSource(false)
+        recyclerView.layoutManager = LinearLayoutManager(activity?.applicationContext)
+        recyclerView.adapter = RecyclerAdapter(titleList, descList, imageList, linksList)
     }
 
-    private fun loadWebSiteSource(isRefresh: Boolean) {
+    private fun addToList(title: String, description: String, image: String, link: String){
+        titleList.add(title)
+        descList.add(description)
+        imageList.add(image)
+        linksList.add(link)
+    }
 
-        if(!isRefresh){
-            val cache = Paper.book().read<String>("cache")
-            if(cache != null && !cache.isBlank() && cache != "null"){
-                //read cache
-                val website = Gson().fromJson<Website>(cache, Website::class.java)
-                adapter = ListSourceAdapter(activity!!.baseContext, website)
-                adapter.notifyDataSetChanged()
-                recyclerView.adapter = adapter
-            }
-            else{
-                //load website and write cache
-                //dialog.show()
-                //fetch new data
-                mService.sources.enqueue(object:retrofit2.Callback<Website>{
-                    override fun onResponse(call: Call<Website>, response: Response<Website>) {
-                        adapter = ListSourceAdapter(activity!!.baseContext, response!!.body()!!)
-                        adapter.notifyDataSetChanged()
-                        recyclerView.adapter = adapter
-
-                        //Save to cache
-                        Paper.book().write("cache", Gson().toJson(response!!.body()!!))
-
-                        //dialog.dismiss()
-                    }
-
-                    override fun onFailure(call: Call<Website>, t: Throwable) {
-                        Toast.makeText(activity!!.baseContext, "Failed", Toast.LENGTH_SHORT).show()
-                    }
-                })
-            }
-        }
-        else{
-
-
-            swipe_to_refresh.isRefreshing=true
-
-            mService.sources.enqueue(object:retrofit2.Callback<Website>{
-                override fun onResponse(call: Call<Website>, response: Response<Website>) {
-                    adapter = ListSourceAdapter(activity!!.baseContext, response!!.body()!!)
-                    adapter.notifyDataSetChanged()
-                    recyclerView.adapter = adapter
-
-                    //Save to cache
-                    Paper.book().write("cache", Gson().toJson(response!!.body()!!))
-
-                    swipe_to_refresh.isRefreshing=false
+    private fun makeAPIRequest(view: View) {
+        val api = Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(NewsService::class.java)
+        GlobalScope.launch(Dispatchers.IO) {
+            try {
+                val response = api.getNews()
+                for (article in response.articles) {
+                    Log.i(TAG, "Result = $article")
+                    addToList(article.title,article.description,article.urlToImage,article.url)
                 }
 
-                override fun onFailure(call: Call<Website>, t: Throwable) {
-                    Toast.makeText(activity!!.baseContext, "Failed", Toast.LENGTH_SHORT).show()
+                withContext(Dispatchers.Main){
+                    setUpRecyclerView(view)
                 }
-            })
+            } catch (e: Exception) {
+                Log.e(TAG, e.toString())
+            }
         }
+    }
+
+    private fun initViews(parentView: View){
+
+
+    }
+
+    private fun initListeners() {
 
     }
 }

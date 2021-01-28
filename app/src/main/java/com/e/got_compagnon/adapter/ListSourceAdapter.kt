@@ -13,6 +13,7 @@ import com.e.got_compagnon.adapter.ViewHolder.ListSourceViewHolder
 import com.e.got_compagnon.model.Website
 
 class ListSourceAdapter(private val context:Context, private val webSite:Website):RecyclerView.Adapter<ListSourceViewHolder>() {
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListSourceViewHolder {
         val inflater = LayoutInflater.from(parent!!.context)
         val itemView = inflater.inflate(R.layout.news_list, parent, false)
@@ -32,6 +33,11 @@ class ListSourceAdapter(private val context:Context, private val webSite:Website
     }
 
     override fun getItemCount(): Int {
-        return webSite.sources!!.size
+        if(webSite != null) {
+            return webSite.sources!!.size
+        }
+        else{
+            return 0
+        }
     }
 }

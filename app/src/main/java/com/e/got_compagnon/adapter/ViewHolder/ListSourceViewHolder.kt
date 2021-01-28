@@ -1,5 +1,6 @@
 package com.e.got_compagnon.adapter.ViewHolder
 
+import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.TextView

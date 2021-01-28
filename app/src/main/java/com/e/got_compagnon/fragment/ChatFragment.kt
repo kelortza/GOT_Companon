@@ -20,6 +20,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import java.time.LocalDateTime
 import java.util.*
 
 class ChatFragment : Fragment() {
@@ -151,6 +152,9 @@ class ChatFragment : Fragment() {
                     //update UI
                     val chats: List<Chat> =
                         it.result?.documents?.mapNotNull { it.toObject(Chat::class.java) }.orEmpty()
+
+                    chats.sortedBy { it.sentAt }
+
                     chatAdapter.chatList = chats
                     chatAdapter.notifyDataSetChanged()
                 } else {
