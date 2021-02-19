@@ -49,7 +49,6 @@ class NewsFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
         Log.i(TAG, "++ onViewCreated ++")
         //Init views
-        initViews(view)
         //Init Listeners
         //initListeners()
         //make API Request
@@ -91,14 +90,5 @@ class NewsFragment: Fragment() {
                 Log.e(TAG, e.toString())
             }
         }
-    }
-
-    private fun initViews(parentView: View){
-
-
-    }
-
-    private fun initListeners() {
-
     }
 }

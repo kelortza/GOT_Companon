@@ -2,8 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.e.got_compagnon">
 
-    <uses-permission
-        android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -12,19 +11,19 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.GOT_Compagnon">
-        android:networkSecurityConfig="@xml/network_security_config"
-        <activity android:name=".SplashActivity2"
+        <activity android:name=".activity.TwitchLoginActivity"></activity>
+        <activity
+            android:name=".SplashActivity2"
             android:theme="@style/SplashTheme">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".MainActivity"
-            android:theme="@style/Theme.AppCompat">
-        </activity>
+            android:theme="@style/Theme.AppCompat"></activity>
         <activity
             android:name=".RegisterActivity"
             android:label="Register"
@@ -32,6 +31,10 @@
         <activity
             android:name=".LoginActivity"
             android:label="Login"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".articleActivity"
+            android:label="article"
             android:parentActivityName=".MainActivity" />
     </application>
 

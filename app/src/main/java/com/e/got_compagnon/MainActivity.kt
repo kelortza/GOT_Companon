@@ -8,6 +8,7 @@ import androidx.fragment.app.FragmentTransaction
 import com.e.got_compagnon.fragment.ChatFragment
 import com.e.got_compagnon.fragment.NewsFragment
 import com.e.got_compagnon.fragment.ProfileFragment
+import com.e.got_compagnon.fragment.StreamsFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
@@ -40,6 +41,11 @@ class MainActivity : AppCompatActivity() {
                     //TODO Perfil
                     val transaction : FragmentTransaction = supportFragmentManager.beginTransaction()
                     transaction.replace(R.id.fragmentContainer, ProfileFragment())
+                    transaction.commit()
+                }
+                R.id.twicth ->{
+                    val transaction : FragmentTransaction = supportFragmentManager.beginTransaction()
+                    transaction.replace(R.id.fragmentContainer, StreamsFragment())
                     transaction.commit()
                 }
             }

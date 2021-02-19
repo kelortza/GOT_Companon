@@ -1,5 +1,6 @@
 package com.e.got_compagnon.adapter
 
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.view.LayoutInflater
@@ -11,6 +12,8 @@ import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.e.got_compagnon.R
+import com.e.got_compagnon.RegisterActivity
+import com.e.got_compagnon.articleActivity
 
 class RecyclerAdapter(
     private var titles: List<String>,
@@ -27,10 +30,18 @@ class RecyclerAdapter(
 
         init {
             itemView.setOnClickListener { v: View ->
-                val position: Int = adapterPosition
-                val intent  = Intent(Intent.ACTION_VIEW)
-                intent.data = Uri.parse(links[position])
-                startActivity(itemView.context, intent, null)
+                //val position: Int = adapterPosition
+                //val intent  = Intent(Intent.ACTION_VIEW)
+                //intent.data = Uri.parse(links[position])
+                //startActivity(itemView.context, intent, null)
+
+
+                //val intent = Intent(activity, RegisterActivity::class.java)
+                //startActivity(intent)
+
+                val intent = Intent(v.context, articleActivity::class.java)
+                intent.putExtra("url", links[position])
+                startActivity(v.context, intent, null)
             }
         }
 

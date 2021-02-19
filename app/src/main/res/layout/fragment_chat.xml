@@ -5,19 +5,33 @@
     android:layout_height="wrap_content"
     android:layout_width="match_parent">
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/swipeRefreshLayout"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/sendMessageContainer">
+        android:layout_height="match_parent">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView"
+        <TextView
+            android:id="@+id/error_background"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@+id/sendMessageContainer"
-            android:paddingBottom="16dp"/>
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+            android:background="@color/black"/>
+        <TextView
+            android:id="@+id/error_message"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_centerInParent="true"
+            android:text="You must be logged to send messages."
+            android:textColor="@color/white"
+            android:textAlignment="center"
+            android:textSize="20dp"/>
+
+    </RelativeLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/sendMessageContainer"
+        android:paddingBottom="16dp"/>
 
     <!-- Send message container -->
     <RelativeLayout
@@ -30,15 +44,25 @@
         <EditText
             android:id="@+id/messageEditText"
             android:layout_width="match_parent"
-            android:layout_toStartOf="@+id/sendButton"
-            android:layout_height="match_parent"/>
+            android:layout_toStartOf="@id/sendButton"
+            android:textColor="@color/black_700"
+            android:layout_height="match_parent"
+            android:background="@drawable/oval_rect_red"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:paddingLeft="08dp"
+            android:hint="Write a message"
+            android:textColorHint="@color/black_200"
+            android:elevation="2dp"/>
 
         <Button
             android:id="@+id/sendButton"
             android:layout_alignParentEnd="true"
             android:background="@drawable/ic_send"
             android:layout_height="40dp"
-            android:layout_width="40dp"/>
+            android:layout_width="40dp"
+            android:layout_marginRight="12dp"/>
     </RelativeLayout>
 
 </RelativeLayout>
