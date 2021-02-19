@@ -13,6 +13,7 @@ import androidx.lifecycle.lifecycleScope
 import com.e.got_compagnon.Constants
 import com.e.got_compagnon.R
 import com.e.got_compagnon.model.OAuthTokensResponse
+import com.e.got_compagnon.service.NetworkManager
 import io.ktor.client.*
 import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.features.json.*
@@ -82,20 +83,7 @@ class TwitchLoginActivity : AppCompatActivity() {
             &grant_type=authorization_code
             &redirect_uri=<your registered redirect URI>
          */
-        //val client = OkHttpClient()
-
-        //configure json
-        val jsonConfig = kotlinx.serialization.json.Json {
-            ignoreUnknownKeys = true
-            isLenient = true
-            encodeDefaults = false
-        }
-
-        val httpClient = HttpClient(OkHttp){
-            install(JsonFeature) {
-                serializer = KotlinxSerializer(jsonConfig)
-            }
-        }
+        val httpClient = NetworkManager.createHttpClient()
 
         lifecycleScope.launch {
 

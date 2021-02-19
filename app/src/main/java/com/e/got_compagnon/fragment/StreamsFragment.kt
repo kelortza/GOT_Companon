@@ -1,27 +1,43 @@
 package com.e.got_compagnon.fragment
 
 import android.content.Intent
+import android.nfc.Tag
 import android.os.Bundle
+import android.os.UserManager
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.e.got_compagnon.Constants
 import com.e.got_compagnon.R
 import com.e.got_compagnon.activity.TwitchLoginActivity
 import com.e.got_compagnon.adapter.RecyclerAdapterStreams
+import com.e.got_compagnon.model.Games
 import com.e.got_compagnon.model.TWStreamResponse
 import com.e.got_compagnon.network.Client
 import com.e.got_compagnon.network.Endpoints
+import com.e.got_compagnon.service.NetworkManager
+import io.ktor.client.features.*
+import io.ktor.client.features.get
+import io.ktor.client.request.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import retrofit2.Call
 import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import javax.security.auth.callback.Callback
 
 class StreamsFragment: Fragment() {
     private val TAG = "StreamsFragment"
+    private val BASE_URL = "https://api.twitch.tv/helix/"
     private lateinit var twictLoginButton: Button
     private lateinit var recyclerView: RecyclerView
 
@@ -42,7 +58,12 @@ class StreamsFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initViews(view)
         initListeners()
-        checkUserAvailability(view)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        Log.i(TAG, "++ onStart ++")
+        checkUserAvailability(view!!)
     }
 
     private fun initViews(view: View){
@@ -60,7 +81,7 @@ class StreamsFragment: Fragment() {
         if(isLoggedIn){
             twictLoginButton.visibility = View.GONE
             setUpRecyclerView(view)
-            makeAPIRequest(view)
+            getTopGames(view)
         } else {
             twictLoginButton.visibility = View.VISIBLE
         }
@@ -78,20 +99,41 @@ class StreamsFragment: Fragment() {
         thumbnailList.add(image)
     }
 
-    private fun makeAPIRequest(view: View){
-        Client.service.getStreams().enqueue(Client : Callback<TWStreamResponse>{
-            override fun onResponse(call: Call<TWStreamResponse>, response: Response<TWStreamResponse>){
-                response.body()?.data?.let{streams->
-                    for(stream in streams){
-                        Log.i(TAG, "Title:${stream.title} and image: ${stream.imageUrl} and username: ${stream.username}")
-                        Log.i(TAG, "Stream Url: https://www.twitch.tv/${stream.username}")
-                    }
-                }
-            }
+   private fun getTopGames(view: View) {
+       val httpClient = NetworkManager.createHttpClient()
+       //viewLifecycleOwner.lifecycleScope.launch{
+       //withContext(Dispatchers.IO){
+       GlobalScope.launch(Dispatchers.IO) {
+           try {
+               val accessToken =
+                   com.e.got_compagnon.service.UserManager(requireContext()).getAccessToken()
+               val response = httpClient.get<Games>(BASE_URL + "games?name=GhostOfTsushima") {
+                   header("Authorization", "Bearer $accessToken")
+                   header("Client-Id", Constants.OAUTH_CLIENT_ID)
+               }
+               addToList(response.name, response.id, response.Image)
 
-            override fun onFailure(call: Call<TWStreamResponse>, t: Throwable){
-                t.printStackTrace()
-            }
-        })
-    }
+               /*
+               val games = response.games
+               for (game in games) {
+                   Log.i(TAG, game.name!!)
+
+                   addToList(game.name, game.id!!, game.box_art_url!!)
+               }
+
+                */
+               Log.i(TAG, "Got top Games: $response")
+
+               withContext(Dispatchers.Main) {
+                   //TODO: Update UI
+                   setUpRecyclerView(view)
+               }
+           } catch (t: Throwable) {
+               //TODO: Handle error
+               Log.i(TAG, t.message.toString())
+           }
+       }
+   }
+       //}
+   //}
 }
