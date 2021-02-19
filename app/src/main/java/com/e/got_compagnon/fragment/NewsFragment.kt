@@ -11,16 +11,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.e.got_compagnon.Interface.NewsService
 import com.e.got_compagnon.R
-import com.e.got_compagnon.adapter.RecyclerAdapter
-import com.squareup.okhttp.OkHttpClient
+import com.e.got_compagnon.adapter.RecyclerAdapterNews
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.sql.Time
-import java.util.concurrent.TimeUnit
 
 class NewsFragment: Fragment() {
 
@@ -29,7 +26,6 @@ class NewsFragment: Fragment() {
     private val TAG = "NewsFragment"
 
     private lateinit var recyclerView: RecyclerView
-    lateinit var countDownTimer: CountDownTimer
 
     private var titleList = mutableListOf<String>()
     private var descList = mutableListOf<String>()
@@ -59,10 +55,10 @@ class NewsFragment: Fragment() {
     private fun setUpRecyclerView(view: View) {
         recyclerView = view.findViewById(R.id.recyclerViewNews)
         recyclerView.layoutManager = LinearLayoutManager(activity?.applicationContext)
-        recyclerView.adapter = RecyclerAdapter(titleList, descList, imageList, linksList)
+        recyclerView.adapter = RecyclerAdapterNews(titleList, descList, imageList, linksList)
     }
 
-    private fun addToList(title: String, description: String, image: String, link: String){
+    private fun  addToList(title: String, description: String, image: String, link: String){
         titleList.add(title)
         descList.add(description)
         imageList.add(image)

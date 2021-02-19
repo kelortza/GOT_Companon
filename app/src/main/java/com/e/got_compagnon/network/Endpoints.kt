@@ -6,7 +6,7 @@ import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Headers
 
-interface ApiService {
+interface Endpoints {
     @Headers("Client-ID: ${Constants.OAUTH_CLIENT_ID}")
     @GET("streams")
     fun getStreams(): Call<TWStreamResponse>

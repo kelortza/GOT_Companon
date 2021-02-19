@@ -1,6 +1,5 @@
-package com.e.got_compagnon.Remote
+package com.e.got_compagnon.network
 
-import com.e.got_compagnon.network.ApiService
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -10,5 +9,5 @@ object Client {
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 
-    val service = retrofit.create<ApiService>(ApiService::class.java)
+    val service = retrofit.create<Endpoints>(Endpoints::class.java)
 }
