@@ -9,7 +9,7 @@ data class Games(
     //val games: List<Game>,
     //val status: String,
     //val totalResults: Int
-    val Image: String,
+    @SerialName("box_art_url") val Image: String,
     @SerialName("id") val id: String,
     @SerialName("name") val name: String
 ){
@@ -18,3 +18,16 @@ data class Games(
         return Image?.replace("{width}x{height}", "500x500")
     }
 }
+
+/*
+ @Serializable
+data class Games(
+    @SerialName("id")
+    val id: String,
+    @SerialName("name")
+    val name: String,
+    @SerialName("box_art_url")
+    val boxArtUrl: String
+)
+
+ */

@@ -103,6 +103,7 @@ class StreamsFragment: Fragment() {
        val httpClient = NetworkManager.createHttpClient()
        //viewLifecycleOwner.lifecycleScope.launch{
        //withContext(Dispatchers.IO){
+
        GlobalScope.launch(Dispatchers.IO) {
            try {
                val accessToken =
@@ -111,6 +112,7 @@ class StreamsFragment: Fragment() {
                    header("Authorization", "Bearer $accessToken")
                    header("Client-Id", Constants.OAUTH_CLIENT_ID)
                }
+               response.Image?.replace("{width}x{height}", "500x500")
                addToList(response.name, response.id, response.Image)
 
                /*
